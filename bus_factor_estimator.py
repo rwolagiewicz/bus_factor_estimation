@@ -47,7 +47,7 @@ class BusFactorEstimator:
             tasks = []
             names, urls = await self._get_repositories_contributors_urls()
             for url in urls:
-                tasks.append(asyncio.ensure_future(self._get_contributors(url)))
+                tasks.append(asyncio.create_task(self._get_contributors(url)))
 
             contributors = await asyncio.gather(*tasks)
             return dict(zip(names, contributors))
@@ -57,7 +57,7 @@ class BusFactorEstimator:
         pages_number = self._pages
         for page_nr in range(1, pages_number + 1):
             per_page = MAX_PER_PAGE if page_nr < pages_number else self._last_page_nr
-            tasks.append(asyncio.ensure_future(self._get_repositories_page(per_page, page_nr)))
+            tasks.append(asyncio.create_task(self._get_repositories_page(per_page, page_nr)))
 
         responses = await asyncio.gather(*tasks)
         repository_names = []
