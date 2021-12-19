@@ -11,7 +11,13 @@ developers.
 
 - python 3.9 
 - aiohttp==3.8.1
+- pytest-asyncio==0.16.0
+- pytest==6.2.3
 
 ### Run 
 
 ```./bus_factor.py --language rust --project_count 120```
+
+### Run tests
+
+```pytest tests/```
