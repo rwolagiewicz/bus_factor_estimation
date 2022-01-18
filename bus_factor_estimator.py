@@ -35,9 +35,10 @@ class BusFactorEstimator:
 
         for name, contributors in repositories_with_contributors.items():
             contributions = [x["contributions"] for x in contributors]
-            percentage = round(contributions[0] / sum(contributions), 2)
-            if percentage >= 0.75:
-                results.append({"project": name, "user": contributors[0]["login"], "percentage": percentage})
+            if contributions:
+                percentage = round(contributions[0] / sum(contributions), 2)
+                if percentage >= 0.75:
+                    results.append({"project": name, "user": contributors[0]["login"], "percentage": percentage})
 
         return results
 
