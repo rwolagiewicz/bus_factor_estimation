@@ -27,6 +27,7 @@ class BusFactorEstimator:
         self._project_count = project_count
         self._sort = sort
         self._sorting_order = sorting_order
+        self._session = None
 
     def bus_factor_repositories(self) -> List[Dict[str, Union[str, float]]]:
         results = []

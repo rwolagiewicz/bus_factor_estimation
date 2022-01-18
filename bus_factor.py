@@ -14,5 +14,6 @@ args = parser.parse_args()
 estimator = BusFactorEstimator(args.language, args.project_count, args.sort, args.sorting_order)
 repositories = estimator.bus_factor_repositories()
 for repository in repositories:
-    repository['percentage'] = '{:.2f}'.format(repository['percentage'])
-    print('{: <30} {: <30} {: <30}'.format(*[f'{key}: {val}' for key, val in repository.items()]))
+    repository['percentage'] = f"{repository['percentage']:.2f}"
+    project, user, percentage = [f'{key}: {val}' for key, val in repository.items()]
+    print(f'  {project: <30} {user: <30} {percentage: <30}')
