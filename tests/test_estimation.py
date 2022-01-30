@@ -9,6 +9,7 @@ from bus_factor_estimator import BusFactorEstimator
     ('cobol', 5, [{'project': 'node-cobol', 'user': 'IonicaBizau', 'percentage': 0.9}, {'project': 'cobweb', 'user': 'xtuc', 'percentage': 1.0}]),
     ('python', 10, [{'project': 'awesome-python', 'user': 'vinta', 'percentage': 0.87}, {'project': 'httpie', 'user': 'jakubroztocil', 'percentage': 0.84}, {'project': 'you-get', 'user': 'soimort', 'percentage': 0.75}]),
     ('golang', 10, [{'project': 'frp', 'user': 'fatedier', 'percentage': 0.88}, {'project': 'fzf', 'user': 'junegunn', 'percentage': 0.93}]),
+    ('erlang', 40, [{'project': 'cowboy', 'user': 'essen', 'percentage': 0.92}, {'project': 'tsung', 'user': 'nniclausse', 'percentage': 0.9}, {'project': 'actordb', 'user': 'SergejJurecko', 'percentage': 0.99}, {'project': 'mochiweb', 'user': 'etrepum', 'percentage': 0.76}, {'project': 'clojerl', 'user': 'jfacorro', 'percentage': 0.99}, {'project': 'n2o', 'user': '5HT', 'percentage': 0.8}, {'project': 'hackney', 'user': 'benoitc', 'percentage': 0.89}, {'project': 'observer_cli', 'user': 'zhongwencool', 'percentage': 0.86}, {'project': 'ranch', 'user': 'essen', 'percentage': 0.75}, {'project': 'gproc', 'user': 'uwiger', 'percentage': 0.8}, {'project': 'lasp', 'user': 'cmeiklejohn', 'percentage': 0.75}]),
 ))
 def test_estimation(mocked_git_api, language, project_count, results):
     assert results == BusFactorEstimator(language, project_count).bus_factor_repositories()

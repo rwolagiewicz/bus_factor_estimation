@@ -92,10 +92,12 @@ class BusFactorEstimator:
 
     async def _make_request(self, url: str, *args, **kwargs) -> ClientResponse:
         resp = await self._session.get(url, *args, **kwargs)
-        resp.raise_for_status()
-        if resp.status != 200:
+        if resp.status == 200:
+            return resp
+        elif 400 <= resp.status < 500:
+            raise Exception(f"Wrong parameters, popable there is no language such as: {self.language}")
+        else:
             resp.raise_for_status()
-        return resp
 
     @property
     def _pages(self) -> int:
