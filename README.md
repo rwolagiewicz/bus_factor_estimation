@@ -9,17 +9,25 @@ developers.
 
 ### Environment
 
-- python 3.9 
-- aiohttp==3.8.1
-- pytest-asyncio==0.16.0
-- pytest==6.2.3
+```python3 -m pip install pipenv```
+
+```pipenv shell```
+
+```pipenv install -d```
+
 
 ### Run 
 
-```GIT_TOKEN=your_private_github_token ./bus_factor.py --language golang --project_count 120```
+```GIT_TOKEN=your_private_github_token python3 bus_factor.py --language golang --project_count 120```
+
+Generate your_private_github_token:
+
+https://github.com/settings/tokens
+
+Docs: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic
 
 ![Screenshot 2021-12-19 224453](https://user-images.githubusercontent.com/40454834/146691899-a5dd062e-4749-4254-89d3-2e27045c4585.jpg)
 
 ### Run tests
 
-```pytest tests/```
+```python3 -m pytest tests/```

@@ -1,16 +1,16 @@
-import os
 import asyncio
-from typing import Dict, List, Tuple, Union, Any
+import os
+
 from aiohttp import ClientSession
 from aiohttp.client_reqrep import ClientResponse
-
 
 GIT_TOKEN = os.getenv("GIT_TOKEN")
 API_URL = "https://api.github.com"
 MAX_PER_PAGE = 100
 
 
-ContributorsData = List[Dict[str, Any]]
+ContributorsData = list[dict]
+
 
 class BusFactorEstimator:
     def __init__(
@@ -29,23 +29,34 @@ class BusFactorEstimator:
         self._sorting_order = sorting_order
         self._session = None
 
-    def bus_factor_repositories(self) -> List[Dict[str, Union[str, float]]]:
+    def bus_factor_repositories(self) -> list[dict]:
         results = []
-        repositories_with_contributors = asyncio.run(self._get_repositories_with_cotributors())
+        repositories_with_contributors = asyncio.run(
+            self._get_repositories_with_cotributors()
+        )
 
         for name, contributors in repositories_with_contributors.items():
+            if not contributors:
+                continue
+
             contributions = [x["contributions"] for x in contributors]
-            if contributions:
-                percentage = round(contributions[0] / sum(contributions), 2)
-                if percentage >= 0.75:
-                    results.append({"project": name, "user": contributors[0]["login"], "percentage": percentage})
+            if (percentage := round(contributions[0] / sum(contributions), 2)) >= 0.75:
+                results.append(
+                    {
+                        "project": name,
+                        "user": contributors[0]["login"],
+                        "percentage": percentage,
+                    }
+                )
 
         return results
 
-    async def _get_repositories_with_cotributors(self) -> Dict[str, ContributorsData]:
-        headers = {"Authorization": f"token {GIT_TOKEN}"}
-        async with ClientSession(headers=headers) as session:
+    async def _get_repositories_with_cotributors(self) -> dict[str, ContributorsData]:
+        async with ClientSession(
+            headers={"Authorization": f"token {GIT_TOKEN}"}
+        ) as session:
             self._session = session
+
             tasks = []
             names, urls = await self._get_repositories_contributors_urls()
             for url in urls:
@@ -54,12 +65,14 @@ class BusFactorEstimator:
             contributors = await asyncio.gather(*tasks)
             return dict(zip(names, contributors))
 
-    async def _get_repositories_contributors_urls(self) -> Tuple[List[str], List[str]]:
+    async def _get_repositories_contributors_urls(self) -> tuple[list[str], list[str]]:
         tasks = []
         pages_number = self._pages
         for page_nr in range(1, pages_number + 1):
             per_page = MAX_PER_PAGE if page_nr < pages_number else self._last_page_nr
-            tasks.append(asyncio.create_task(self._get_repositories_page(per_page, page_nr)))
+            tasks.append(
+                asyncio.create_task(self._get_repositories_page(per_page, page_nr))
+            )
 
         responses = await asyncio.gather(*tasks)
         repository_names = []
@@ -71,14 +84,14 @@ class BusFactorEstimator:
 
         return repository_names, contributors_urls
 
-    async def _get_repositories_page(self, per_page, page_nr) -> List[Dict[str, Any]]:
+    async def _get_repositories_page(self, per_page, page_nr) -> list[dict]:
         url = os.path.join(API_URL, "search/repositories")
         params = {
             "q": f"language:{self._language}",
             "sort": self._sort,
             "order": self._sorting_order,
             "per_page": per_page,
-            "page": page_nr
+            "page": page_nr,
         }
         resp = await self._make_request(url, params=params)
         data = await resp.json()
@@ -95,13 +108,17 @@ class BusFactorEstimator:
         if resp.status == 200:
             return resp
         elif 400 <= resp.status < 500:
-            raise Exception(f"Wrong parameters, popable there is no language such as: {self.language}")
+            raise Exception(
+                f'Wrong parameters, maybe there is no language such as: "{self._language}"?'
+            )
         else:
             resp.raise_for_status()
 
     @property
     def _pages(self) -> int:
-        return self._project_count // MAX_PER_PAGE + int(bool(self._project_count % MAX_PER_PAGE))
+        return self._project_count // MAX_PER_PAGE + int(
+            bool(self._project_count % MAX_PER_PAGE)
+        )
 
     @property
     def _last_page_nr(self) -> int:

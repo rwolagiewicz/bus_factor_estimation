@@ -1,0 +1,3 @@
+[flake8]
+ignore = ANN101,ANN102,W503,F405,F403,E203
+max-line-length = 120
