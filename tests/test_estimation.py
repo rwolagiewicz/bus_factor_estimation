@@ -74,5 +74,6 @@ from bus_factor_estimator import BusFactorEstimator
 )
 def test_estimation(mocked_git_api, language, project_count, results):
     assert (
-        results == BusFactorEstimator(language, project_count).bus_factor_repositories()
+        results
+        == BusFactorEstimator(language, project_count).get_bus_factor_repositories()
     )

@@ -17,7 +17,7 @@ def run_bus_factor_estimator(args):
     estimator = BusFactorEstimator(
         args.language, args.project_count, args.sort, args.sorting_order
     )
-    repositories = estimator.bus_factor_repositories()
+    repositories = estimator.get_bus_factor_repositories()
     for repository in sorted(repositories, key=lambda x: x["percentage"], reverse=True):
         repository["percentage"] = f"{repository['percentage']:.2f}"
         project, user, percentage = [f"{key}: {val}" for key, val in repository.items()]
