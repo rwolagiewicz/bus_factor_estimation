@@ -1,0 +1,63 @@
+name: continuous_integration
+
+on: push
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/bus_factor_estimation@v1
+      - run: pipenv run python3 -m flake8 .
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - run: |
+          python3 -m pip install pipenv==2022.10.12
+          pipenv install -d
+      - run: pipenv run python3 -m black --check --diff .
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - run: |
+          python3 -m pip install pipenv==2022.10.12
+          pipenv install -d
+      - run: pipenv run python3 -m mypy .
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - run: |
+          python3 -m pip install pipenv==2022.10.12
+          pipenv install -d
+      - run: pipenv run python3 -m isort --profile black --check-only .
+  tests:
+    runs-on: ubuntu-latest
+    needs: [flake8, black, mypy, isort]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - run: |
+          python3 -m pip install pipenv==2022.10.12
+          pipenv install -d
+      - run: pipenv run python3 -m pytest --cov .
