@@ -6,7 +6,7 @@ jobs:
   flake8:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/bus_factor_estimation@v1
+      - uses: rwolagiewicz/bus_factor_estimation@v1
       - run: pipenv run python3 -m flake8 .
   black:
     runs-on: ubuntu-latest
