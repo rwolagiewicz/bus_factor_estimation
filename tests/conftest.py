@@ -1,8 +1,10 @@
-import pytest
-import sys
 import json
+import sys
+
+import pytest
 
 sys.path.append(".")
+
 
 @pytest.fixture
 def mocked_git_api(monkeypatch):
@@ -20,12 +22,13 @@ def mocked_git_api(monkeypatch):
             async def json(self):
                 return self._data
 
-        with open('tests/resources/test_data.json') as f:
+        with open("tests/resources/test_data.json") as f:
             data = json.load(f)
             url = args[1]
-            params = [str(x) for x in kwargs.get('params').values()]
-            key = '&'.join([url, *params])
+            params = [str(x) for x in kwargs.get("params").values()]
+            key = "&".join([url, *params])
             resp_data = data.get(key)
             resp = MockResponse(resp_data, 200)
             return resp
-    monkeypatch.setattr(BusFactorEstimator, '_make_request', _mocked_make_request)
+
+    monkeypatch.setattr(BusFactorEstimator, "_make_request", _mocked_make_request)
